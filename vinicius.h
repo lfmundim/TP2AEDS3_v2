@@ -8,11 +8,13 @@
 typedef struct personT{
     char *keys;
     int coord_x, coord_y;
-    int time;
+    int key_n;
 }personT;
 
 void makePerson(personT *person, int key_n);
 
 void freePerson(personT *person);
+
+//void walking(int *keylocation, graphT *graph, mapT map, personT *vinicius, int *shortest);
 
 #endif //TP2_VINICIUS_H

@@ -13,12 +13,15 @@ typedef struct graphT{
     int dimension;
 }graphT;
 
+void openDoor(int keycell, graphT *graph, mapT map);
+
+void closeDoor(int keycell, graphT *graph, mapT map);
+
 void allocGraph(graphT *graph, mapT map);
 
-void makeGraph(mapT map, graphT *graph, personT *person, bool scan); //scan true se for ignorar portas
+void makeGraph(mapT map, graphT *graph, personT *person); //scan true se for ignorar portas
 
-int dijkstra(graphT graph, mapT map);
+int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius);
 
-void dijkstraScan(graphT graph, mapT map, int *keys);
 
 #endif //TP2_2_GRAPH_H
