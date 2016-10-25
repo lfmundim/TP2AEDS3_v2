@@ -7,10 +7,12 @@
 
 #include <stdbool.h>
 #include "map.h"
+#include "graph.h"
+#include "vinicius.h"
 
 int minDistance(int dist[], bool included[], int vertex_num);
 
-int dijkstra(int **graph, int source, int vertex_num, int dest);
+int dijkstra(graphT *graph, int source, int vertex_num, int dest, mapT map, personT person);
 
 //int dijkstraScan(int **graph, int source, int vertex_num, int dest, char *keys, mapT map);
 

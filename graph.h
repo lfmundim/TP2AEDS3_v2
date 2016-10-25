@@ -17,6 +17,10 @@ void openDoor(int keycell, graphT *graph, mapT map);
 
 void closeDoor(int keycell, graphT *graph, mapT map);
 
+void materializeWormhole(bool included[], graphT *graph, mapT map, personT person);
+
+void dematerializeWormhole(bool included[], graphT *graph, mapT map, personT person);
+
 void allocGraph(graphT *graph, mapT map);
 
 void makeGraph(mapT map, graphT *graph, personT *person); //scan true se for ignorar portas

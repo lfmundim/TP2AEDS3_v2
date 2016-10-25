@@ -10,7 +10,7 @@
 #include "dijkstra.h"
 
 void openDoor(int keycell, graphT *graph, mapT map){
-    int i, j, number;
+    int i, j, number, count=0;
     char aux;
 
     for(i=0; i<map.size_x; i++){
@@ -68,6 +68,45 @@ void closeDoor(int keycell, graphT *graph, mapT map){
         }
     }
 
+}
+
+void materializeWormhole(bool included[], graphT *graph, mapT map, personT person){
+    int i, j, k;
+
+    for(i=0; i<graph->dimension; i++){
+        for(j=0; j<map.size_x; j++){
+            for(k=0; k<map.size_y; k++){
+                if(included[i]==true && map.matrix[j][k].number==i && map.matrix[j][k].key[0]>47 && map.matrix[j][k].key[0]<58){
+                    map.matrix[j][k].wormhole=true;
+                }
+            }
+        }
+    }
+    makeGraph(map, graph, &person);
+}
+
+void dematerializeWormhole(bool included[], graphT *graph, mapT map, personT person){
+    int i, j, k;
+
+    for(i=0; i<graph->dimension; i++){
+        for(j=0; j<map.size_x; j++){
+            for(k=0; k<map.size_y; k++){
+                if(included[i]==true && map.matrix[j][k].number==i && map.matrix[j][k].wormhole==true){
+                    map.matrix[j][k].wormhole=false;
+                }
+            }
+        }
+    }
+
+    printf("WORMHOLES?\n");
+    for(j=map.size_x-1; j>=0; j--) {
+        for (k = 0; k < map.size_y; k++) {
+            printf("[%d]", map.matrix[j][k].wormhole);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    makeGraph(map, graph, &person);
 }
 
 void allocGraph(graphT *graph, mapT map){
@@ -191,80 +230,80 @@ void makeGraph(mapT map, graphT *graph, personT *person){
 int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
     int aux, i, j, k, shortest;
 
-    shortest = dijkstra(graph->matrix, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, map.matrix[map.exit_x][map.exit_y].number);
+    shortest = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
 
     printf("SEM CHAVES: %d\n", shortest);
 
     if(vinicius->key_n>=1) {
         for (i = 0; i < 4; i++) { //1 key
-            if(keylocation[i]>graph->dimension)
+            if(keylocation[i]>graph->dimension) {
                 break;
-            aux = dijkstra(graph->matrix, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension,
-                           keylocation[i]);
+            }
+            aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension,
+                           keylocation[i], map, *vinicius);
             if(aux<100000) {
                 openDoor(keylocation[i], graph, map);
-                aux += dijkstra(graph->matrix, keylocation[i], graph->dimension,
-                                map.matrix[map.exit_x][map.exit_y].number);
+                aux += dijkstra(graph, keylocation[i], graph->dimension,
+                                map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
             }
             if (aux < shortest) {
                 shortest = aux;
             }
             closeDoor(keylocation[i], graph, map);
         }
+        printf("1 CHAVES: %d\n", shortest);
     }
-    printf("1 CHAVES: %d\n", shortest);
     if(vinicius->key_n >=2){
         for(i=0; i<4; i++){ //2 key
-            for(j=0; j<2; j++){
-                if(keylocation[i]>graph->dimension || keylocation[j]>graph->dimension)
+            for(j=0; j<4; j++){
+                if(keylocation[i]>graph->dimension || keylocation[j]>graph->dimension) {
                     break;
-                aux = dijkstra(graph->matrix, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, keylocation[i]);
+                }
+                aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, keylocation[i], map, *vinicius);
                 openDoor(keylocation[i], graph, map);
-                aux += dijkstra(graph->matrix, keylocation[i], graph->dimension, keylocation[j]);
+                aux += dijkstra(graph, keylocation[i], graph->dimension, keylocation[j], map, *vinicius);
                 openDoor(keylocation[j], graph, map);
-                aux += dijkstra(graph->matrix, keylocation[j], graph->dimension, map.matrix[map.exit_x][map.exit_y].number);
-                if(aux<shortest)
+                aux += dijkstra(graph, keylocation[j], graph->dimension, map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
+                if(aux<shortest) {
                     shortest = aux;
+                }
+                closeDoor(keylocation[i], graph, map);
+                closeDoor(keylocation[j], graph, map);
             }
         }
-        closeDoor(keylocation[i], graph, map);
-        closeDoor(keylocation[j], graph, map);
+        printf("2 CHAVES: %d\n", shortest);
     }
-    printf("2 CHAVES: %d\n", shortest);
-//
-//    for(i=0; i<graph->dimension; i++){
-//        for(j=0; j<graph->dimension; j++){
-//            printf("[%d]", graph->matrix[i][j]);
-//        }
-//        printf("\n");
-//    }
+
 
     if(vinicius->key_n==3){
         for(i=0; i<4; i++){ //3 key
             for(j=0; j<3; j++){
                 for(k=0; k<2; k++){
-                    if(keylocation[i]>graph->dimension || keylocation[j]>graph->dimension || keylocation[k]>graph->dimension)
+                    if(keylocation[i]>graph->dimension || keylocation[j]>graph->dimension || keylocation[k]>graph->dimension) {
                         break;
-                    aux = dijkstra(graph->matrix, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, keylocation[i]);
+                    }
+                    aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, keylocation[i], map, *vinicius);
 //                    printf("AUX0: %d\n", aux);
                     openDoor(keylocation[i], graph, map);
-                    aux += dijkstra(graph->matrix, keylocation[i], graph->dimension, keylocation[j]);
+                    aux += dijkstra(graph, keylocation[i], graph->dimension, keylocation[j], map, *vinicius);
 //                    printf("AUX1: %d\n", aux);
                     openDoor(keylocation[j], graph, map);
-                    aux += dijkstra(graph->matrix, keylocation[j], graph->dimension, keylocation[k]);
+                    aux += dijkstra(graph, keylocation[j], graph->dimension, keylocation[k], map, *vinicius);
 //                    printf("AUX2: %d\n", aux);
                     openDoor(keylocation[k], graph, map);
 //                    printf("TEST: %d\n", dijkstra(graph->matrix, keylocation[k], graph->dimension, map.matrix[map.exit_x][map.exit_y].number));
-                    aux += dijkstra(graph->matrix, keylocation[k], graph->dimension, map.matrix[map.exit_x][map.exit_y].number);
+                    aux += dijkstra(graph, keylocation[k], graph->dimension, map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
 //                    printf("AUX3: %d\n", aux);
-                    if(aux<shortest)
+                    if(aux<shortest) {
                         shortest = aux;
+                    }
                     closeDoor(keylocation[i], graph, map);
                     closeDoor(keylocation[j], graph, map);
                     closeDoor(keylocation[k], graph, map);
                 }
             }
         }
+        printf("3 CHAVES: %d\n", shortest);
     }
 //    for(i=0; i<graph->dimension; i++){
 //        for(j=0; j<graph->dimension; j++){
@@ -272,6 +311,11 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
 //        }
 //        printf("\n");
 //    }
-    printf("3 CHAVES: %d\n", shortest);
+    for(i=0; i<graph->dimension; i++){
+        for(j=0; j<graph->dimension; j++){
+            printf("[%d]", graph->matrix[i][j]);
+        }
+        printf("\n");
+    }
     return shortest;
 }

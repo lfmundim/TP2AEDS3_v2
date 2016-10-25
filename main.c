@@ -4,12 +4,13 @@
 #include "graph.h"
 #include "dijkstra.h"
 #include <limits.h>
+#include <stdlib.h>
 
 int main(){
     mapT map;
     graphT graph;
     personT vinicius;
-    int keys, shortest=INT_MAX, keylocation[4];
+    int keys, shortest, keylocation[4];
 
     scanf("%d %d %d", &map.size_x, &map.size_y, &keys);
     vinicius.key_n = keys;
@@ -25,19 +26,23 @@ int main(){
         }
         printf("\n");
     }
-    //TODO tratar input2, tratar wormholes(sumir, cadeias de wormholes), modificar outro dijkstra pra só calcular o necessário
+    //TODO tratar portas que não abrem, tratar wormholes(sumir, cadeias de wormholes), modificar outro dijkstra pra só calcular o necessário
     allocGraph(&graph, map);
-    makeGraph(map, &graph, &vinicius);//TODO ignorando portas
+    makeGraph(map, &graph, &vinicius);
     findKeys(map, keylocation);
     for(int i=0; i<4; i++)
         printf("%d ", keylocation[i]);
     printf("\n");
-//    shortest = dijkstra(graph.matrix, 12, graph.dimension, 0);
     shortest = walking(keylocation, &graph, map, &vinicius);
     printf("SHORTEST: %d\n", shortest);
 
+    FILE *out;
+    out = fopen("out", "w");
+    fprintf(out, "%d\n", shortest);
+    fclose(out);
+    system("diff out toys/out6");
 
-    //caminha
+
 
     return 0;
 }
