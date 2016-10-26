@@ -22,6 +22,8 @@ typedef struct mapT{
 
 void makeMap(mapT *map);
 
+void freeMap(mapT *map);
+
 void fillMap(mapT *map, personT *person);
 
 void findKeys(mapT map, int *keylocation);

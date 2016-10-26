@@ -8,12 +8,12 @@
 #include "vinicius.h"
 
 void makeMap(mapT *map){
-//    int dimensions = map->size_x*map->size_y;
     int i, j, k=0;
 
     map->matrix = (cellT**)calloc((size_t)map->size_x,sizeof(cellT*));
     for(i=0; i<map->size_x; i++)
         map->matrix[i] = (cellT*)calloc((size_t)map->size_y,sizeof(cellT));
+
     for(i=0; i<map->size_x; i++){
         for(j=0; j<map->size_y; j++){
             map->matrix[i][j].key[0] = '#';
@@ -22,6 +22,14 @@ void makeMap(mapT *map){
             k++;
         }
     }
+}
+
+void freeMap(mapT *map){
+    int i;
+    for(i=0; i<map->size_x; i++)
+        free(map->matrix[i]);
+    free(map->matrix);
+
 }
 
 void fillMap(mapT *map, personT *person){

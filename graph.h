@@ -23,6 +23,8 @@ void dematerializeWormhole(bool included[], graphT *graph, mapT map, personT per
 
 void allocGraph(graphT *graph, mapT map);
 
+void freeGraph(graphT *graph, mapT map);
+
 void makeGraph(mapT map, graphT *graph, personT *person); //scan true se for ignorar portas
 
 int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius);

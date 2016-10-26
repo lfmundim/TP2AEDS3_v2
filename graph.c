@@ -118,6 +118,13 @@ void allocGraph(graphT *graph, mapT map){
         graph->matrix[i] = (int*)calloc((size_t)graph->dimension, sizeof(int));
 }
 
+void freeGraph(graphT *graph, mapT map){
+    int i;
+    for(i=0; i<graph->dimension; i++)
+        free(graph->matrix[i]);
+    free(graph->matrix);
+}
+
 void makeGraph(mapT map, graphT *graph, personT *person){
     int i, j, source, dest, aux[2];
     //preenche com 1s
