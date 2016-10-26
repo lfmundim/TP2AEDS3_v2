@@ -13,10 +13,10 @@ void openDoor(int keycell, graphT *graph, mapT map){
     int i, j, number, count=0;
     char aux;
 
-    for(i=0; i<map.size_x; i++){
+    for(i=map.size_x-1; i>=0; i--){
         for(j=0; j<map.size_y; j++){
             if(map.matrix[i][j].number==keycell) {
-                aux = map.matrix[i][j].key[0]-32;
+                aux = map.matrix[i][j].key[0]-32; //"transforma" minúsculo em maiúsculo (para porta)
             }
         }
     }
@@ -24,15 +24,16 @@ void openDoor(int keycell, graphT *graph, mapT map){
     for(i=0; i<map.size_x; i++){
         for(j=0; j<map.size_y; j++) {
             if(map.matrix[i][j].key[0]==aux){
+//                printf("ENTROU %d:%d\n", i, j);
                 number = map.matrix[i][j].number;
                 if(number-1>=0)
                     graph->matrix[number-1][number]=1;
                 if(number+1<graph->dimension)
                     graph->matrix[number+1][number]=1;
-                if(number-map.size_x>=0)
-                    graph->matrix[number-map.size_x][number]=1;
-                if(number+map.size_x<graph->dimension)
-                    graph->matrix[number+map.size_x][number]=1;
+                if(number-map.size_y>=0)
+                    graph->matrix[number-map.size_y][number]=1;
+                if(number+map.size_y<graph->dimension)
+                    graph->matrix[number+map.size_y][number]=1;
             }
         }
     }
@@ -60,10 +61,10 @@ void closeDoor(int keycell, graphT *graph, mapT map){
                     graph->matrix[number-1][number]=0;
                 if(number+1<graph->dimension)
                     graph->matrix[number+1][number]=0;
-                if(number-map.size_x>=0)
-                    graph->matrix[number-map.size_x][number]=0;
-                if(number+map.size_x<graph->dimension)
-                    graph->matrix[number+map.size_x][number]=0;
+                if(number-map.size_y>=0)
+                    graph->matrix[number-map.size_y][number]=0;
+                if(number+map.size_y<graph->dimension)
+                    graph->matrix[number+map.size_y][number]=0;
             }
         }
     }
@@ -98,14 +99,14 @@ void dematerializeWormhole(bool included[], graphT *graph, mapT map, personT per
         }
     }
 
-    printf("WORMHOLES?\n");
-    for(j=map.size_x-1; j>=0; j--) {
-        for (k = 0; k < map.size_y; k++) {
-            printf("[%d]", map.matrix[j][k].wormhole);
-        }
-        printf("\n");
-    }
-    printf("\n");
+//    printf("WORMHOLES?\n");
+//    for(j=map.size_x-1; j>=0; j--) {
+//        for (k = 0; k < map.size_y; k++) {
+//            printf("[%d]", map.matrix[j][k].wormhole);
+//        }
+//        printf("\n");
+//    }
+//    printf("\n");
     makeGraph(map, graph, &person);
 }
 
@@ -232,7 +233,7 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
 
     shortest = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
 
-    printf("SEM CHAVES: %d\n", shortest);
+//    printf("SEM CHAVES: %d\n", shortest);
 
     if(vinicius->key_n>=1) {
         for (i = 0; i < 4; i++) { //1 key
@@ -251,7 +252,7 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
             }
             closeDoor(keylocation[i], graph, map);
         }
-        printf("1 CHAVES: %d\n", shortest);
+//        printf("1 CHAVES: %d\n", shortest);
     }
     if(vinicius->key_n >=2){
         for(i=0; i<4; i++){ //2 key
@@ -271,7 +272,7 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
                 closeDoor(keylocation[j], graph, map);
             }
         }
-        printf("2 CHAVES: %d\n", shortest);
+//        printf("2 CHAVES: %d\n", shortest);
     }
 
 
@@ -303,7 +304,7 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
                 }
             }
         }
-        printf("3 CHAVES: %d\n", shortest);
+//        printf("3 CHAVES: %d\n", shortest);
     }
 //    for(i=0; i<graph->dimension; i++){
 //        for(j=0; j<graph->dimension; j++){
@@ -311,11 +312,11 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
 //        }
 //        printf("\n");
 //    }
-    for(i=0; i<graph->dimension; i++){
-        for(j=0; j<graph->dimension; j++){
-            printf("[%d]", graph->matrix[i][j]);
-        }
-        printf("\n");
-    }
+//    for(i=0; i<graph->dimension; i++){
+//        for(j=0; j<graph->dimension; j++){
+//            printf("[%d]", graph->matrix[i][j]);
+//        }
+//        printf("\n");
+//    }
     return shortest;
 }

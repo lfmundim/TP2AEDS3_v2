@@ -19,28 +19,27 @@ int main(){
 
     makeMap(&map); //OK
     fillMap(&map, &vinicius); //OK
-    printf("GRID:\n");
-    for(int i=map.size_x-1; i>=0; i--){
-        for(int j=0; j<map.size_y; j++){
-            printf("[%c]", map.matrix[i][j].key[0]);
-        }
-        printf("\n");
-    }
+//    printf("GRID:\n");
+//    for(int i=map.size_x-1; i>=0; i--){
+//        for(int j=0; j<map.size_y; j++){
+//            printf("[%c]", map.matrix[i][j].key[0]);
+//        }
+//        printf("\n");
+//    }
     //TODO tratar portas que não abrem, tratar wormholes(sumir, cadeias de wormholes), modificar outro dijkstra pra só calcular o necessário
     allocGraph(&graph, map);
     makeGraph(map, &graph, &vinicius);
     findKeys(map, keylocation);
-    for(int i=0; i<4; i++)
-        printf("%d ", keylocation[i]);
-    printf("\n");
+//    for(int i=0; i<4; i++)
+//        printf("%d ", keylocation[i]);
+//    printf("\n");
     shortest = walking(keylocation, &graph, map, &vinicius);
-    printf("SHORTEST: %d\n", shortest);
+//    printf("SHORTEST: %d\n", shortest);
 
-    FILE *out;
-    out = fopen("out", "w");
-    fprintf(out, "%d\n", shortest);
-    fclose(out);
-    system("diff out toys/out6");
+    if(shortest==100000)
+        printf("-1\n");
+    else
+        printf("%d\n", shortest);
 
 
 
