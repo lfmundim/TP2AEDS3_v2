@@ -26,7 +26,7 @@ int main(){
 //        }
 //        printf("\n");
 //    }
-    //TODO tratar portas que não abrem, tratar wormholes(sumir, cadeias de wormholes), modificar outro dijkstra pra só calcular o necessário
+    //TODO tratar wormholes(sumir, cadeias de wormholes), modificar outro dijkstra pra só calcular o necessário
     allocGraph(&graph, map);
     makeGraph(map, &graph, &vinicius);
     findKeys(map, keylocation);
