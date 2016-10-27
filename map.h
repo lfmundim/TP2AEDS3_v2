@@ -12,6 +12,7 @@ typedef struct cellT{
     char key[2];
     bool wormhole;
     int number;
+    bool wormhole_dest;
 }cellT;
 
 typedef struct mapT{

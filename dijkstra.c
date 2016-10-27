@@ -20,7 +20,7 @@ int minDistance(int dist[], bool included[], int vertex_num){
 }
 
 int dijkstra(graphT *graph, int source, int vertex_num, int dest, mapT map, personT person){
-    int dist[vertex_num], i, j, v, k, flag=false, aux=0;
+    int dist[vertex_num], i, j, v;
     bool included[vertex_num];
 
     for(i=0; i<vertex_num; i++){
@@ -33,12 +33,16 @@ int dijkstra(graphT *graph, int source, int vertex_num, int dest, mapT map, pers
     for(i=0; i<vertex_num-1; i++){
         v = minDistance(dist, included, vertex_num);
         included[v] = true;
+
+        //wormhole -- TIRAR SE NAO RESOLVER NADA DE WORMHOLE
+
+
         for(j=0; j<vertex_num; j++){
             if(!included[j] && graph->matrix[v][j] && dist[v] != INT_MAX && dist[v]+graph->matrix[v][j] < dist[j]){
+//                printf("%d + %d\n", dist[v]+graph->matrix[v][j]);
                 dist[j] = dist[v]+graph->matrix[v][j];
             }
         }
     }
-//    materializeWormhole(included, graph, map, person);
     return dist[dest];
 }

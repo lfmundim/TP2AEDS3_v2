@@ -19,7 +19,7 @@ int main(){
 
     makeMap(&map); //OK
     fillMap(&map, &vinicius); //OK
-    //TODO tratar wormholes(sumir, cadeias de wormholes), modificar outro dijkstra pra só calcular o necessário
+    //TODO tratar wormholes(sumir), modificar outro dijkstra pra só calcular o necessário
     allocGraph(&graph, map);
     makeGraph(map, &graph, &vinicius);
     findKeys(map, keylocation);
@@ -30,7 +30,7 @@ int main(){
     else
         printf("%d\n", shortest);
     freePerson(&vinicius);
-    freeGraph(&graph, map);
+    freeGraph(&graph);
     freeMap(&map);
 
 
