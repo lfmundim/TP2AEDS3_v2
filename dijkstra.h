@@ -12,9 +12,8 @@
 
 int minDistance(int dist[], bool included[], int vertex_num);
 
-int dijkstra(graphT *graph, int source, int vertex_num, int dest, mapT map, personT person);
+int dijkstra(graphT *graph, int source, int vertex_num, int dest);
 
-//int dijkstraScan(int **graph, int source, int vertex_num, int dest, char *keys, mapT map);
 
 
 #endif //TP2_2_DIJKSTRA_H

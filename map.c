@@ -33,7 +33,7 @@ void freeMap(mapT *map){
 }
 
 void fillMap(mapT *map, personT *person){
-    int i, j, x, y;
+    int i, j;
 
     for(i=map->size_x-1; i>=0; i--){
         for(j=0; j<map->size_y; j++){
@@ -42,9 +42,6 @@ void fillMap(mapT *map, personT *person){
             if(map->matrix[i][j].key[0]>47 && map->matrix[i][j].key[0]<58) {
                 scanf(" %c", &map->matrix[i][j].key[1]);
                 map->matrix[i][j].wormhole = true;
-                x = (int)map->matrix[i][j].key[0];
-                y = (int)map->matrix[i][j].key[1];
-//                map->matrix[x][y].wormhole_dest=1;
             }
             else if(map->matrix[i][j].key[0]=='V'){
                 person->coord_x = i;

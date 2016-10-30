@@ -5,12 +5,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <limits.h>
 #include "graph.h"
-#include "vinicius.h"
 #include "dijkstra.h"
 
 void openDoor(int keycell, graphT *graph, mapT map){
-    int i, j, number, count=0;
+    int i, j, number;
     char aux;
 
     for(i=map.size_x-1; i>=0; i--){
@@ -24,7 +24,6 @@ void openDoor(int keycell, graphT *graph, mapT map){
     for(i=0; i<map.size_x; i++){
         for(j=0; j<map.size_y; j++) {
             if(map.matrix[i][j].key[0]==aux){
-//                printf("ENTROU %d:%d\n", i, j);
                 number = map.matrix[i][j].number;
                 if(number-1>=0)
                     graph->matrix[number-1][number]=1;
@@ -42,7 +41,7 @@ void openDoor(int keycell, graphT *graph, mapT map){
 
 void closeDoor(int keycell, graphT *graph, mapT map){
     int i, j, number;
-    char aux;
+    char aux=-1;
 
     for(i=0; i<map.size_x; i++){
         for(j=0; j<map.size_y; j++){
@@ -133,7 +132,6 @@ void printGraph(graphT *graph){
 
 void makeGraph(mapT map, graphT *graph, personT *person){
     int i, j, source, dest, aux[2];
-    cellT auxcell;
     //preenche com 1s
     for (i = map.size_x - 1; i >= 0; i--) {
         for (j = 0; j < map.size_y; j++) {
@@ -143,7 +141,6 @@ void makeGraph(mapT map, graphT *graph, personT *person){
             }
             //direita
             if (i + 1 < map.size_x) {
-                // int test = map.matrix[i + 1][j].key[0];
                 if (map.matrix[i + 1][j].key[0] != '#' &&
                     map.matrix[i + 1][j].key[0] != 'D' &&
                     map.matrix[i + 1][j].key[0] != 'C' &&
@@ -261,19 +258,18 @@ void makeGraph(mapT map, graphT *graph, personT *person){
 int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
     int aux, i, j, k, shortest;
 
-    shortest = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
+    shortest = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, map.matrix[map.exit_x][map.exit_y].number);
 
     if(vinicius->key_n>=1) {
         for (i = 0; i < 4; i++) { //1 key
             if(keylocation[i]>graph->dimension) {
                 break;
             }
-            aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension,
-                           keylocation[i], map, *vinicius);
+            aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, keylocation[i]);
             if(aux<100000) {
                 openDoor(keylocation[i], graph, map);
                 aux += dijkstra(graph, keylocation[i], graph->dimension,
-                                map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
+                                map.matrix[map.exit_x][map.exit_y].number);
             }
             if (aux < shortest) {
                 shortest = aux;
@@ -288,11 +284,11 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
                 if(keylocation[i]>graph->dimension || keylocation[j]>graph->dimension) {
                     break;
                 }
-                aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, keylocation[i], map, *vinicius);
+                aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension, keylocation[i]);
                 openDoor(keylocation[i], graph, map);
-                aux += dijkstra(graph, keylocation[i], graph->dimension, keylocation[j], map, *vinicius);
+                aux += dijkstra(graph, keylocation[i], graph->dimension, keylocation[j]);
                 openDoor(keylocation[j], graph, map);
-                aux += dijkstra(graph, keylocation[j], graph->dimension, map.matrix[map.exit_x][map.exit_y].number, map, *vinicius);
+                aux += dijkstra(graph, keylocation[j], graph->dimension, map.matrix[map.exit_x][map.exit_y].number);
                 if(aux<shortest) {
                     shortest = aux;
                 }
@@ -312,14 +308,13 @@ int walking(int *keylocation, graphT *graph, mapT map, personT *vinicius){
                         break;
                     }
                     aux = dijkstra(graph, map.matrix[vinicius->coord_x][vinicius->coord_y].number, graph->dimension,
-                                   keylocation[i], map, *vinicius);
+                                   keylocation[i]);
                     openDoor(keylocation[i], graph, map);
-                    aux += dijkstra(graph, keylocation[i], graph->dimension, keylocation[j], map, *vinicius);
+                    aux += dijkstra(graph, keylocation[i], graph->dimension, keylocation[j]);
                     openDoor(keylocation[j], graph, map);
-                    aux += dijkstra(graph, keylocation[j], graph->dimension, keylocation[k], map, *vinicius);
+                    aux += dijkstra(graph, keylocation[j], graph->dimension, keylocation[k]);
                     openDoor(keylocation[k], graph, map);
-                    aux += dijkstra(graph, keylocation[k], graph->dimension, map.matrix[map.exit_x][map.exit_y].number,
-                                    map, *vinicius);
+                    aux += dijkstra(graph, keylocation[k], graph->dimension, map.matrix[map.exit_x][map.exit_y].number);
                     if (aux < shortest) {
                         shortest = aux;
                     }

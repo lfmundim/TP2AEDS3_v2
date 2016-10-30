@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -O0 -Wall -Wextra -std=c99 -pedantic
+CFLAGS = -g -O0 -Wall -Wextra -Werror -std=c99 -pedantic
 OBJ = main.o dijkstra.o vinicius.o map.o graph.o
 DEPS = dijkstra.h vinicius.h map.h graph.h
 VFLAGS = --leak-check=full --leak-resolution=high --show-reachable=yes --track-origins=yes
