@@ -93,7 +93,6 @@ void dematerializeWormhole(int vertex, graphT *graph, mapT map, personT person){
             for(k=0; k<map.size_y; k++){
                 if(map.matrix[j][k].number==vertex && map.matrix[j][k].wormhole==true){
                     map.matrix[j][k].wormhole=false;
-//                    printf("OI\n");
                     goto out;
                 }
             }
@@ -116,18 +115,6 @@ void freeGraph(graphT *graph){
     for(i=0; i<graph->dimension; i++)
         free(graph->matrix[i]);
     free(graph->matrix);
-}
-
-void printGraph(graphT *graph){
-    int i, j;
-
-    for(i=0; i<graph->dimension; i++){
-        for(j=0; j<graph->dimension; j++){
-            printf("[%d]", graph->matrix[i][j]);
-        }
-        printf("\n");
-    }
-
 }
 
 void makeGraph(mapT map, graphT *graph, personT *person){

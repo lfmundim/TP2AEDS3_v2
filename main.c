@@ -17,9 +17,8 @@ int main(){
 
     makePerson(&vinicius, keys);
 
-    makeMap(&map); //OK
-    fillMap(&map, &vinicius); //OK
-    //TODO tratar wormholes(sumir), modificar outro dijkstra pra só calcular o necessário
+    makeMap(&map);
+    fillMap(&map, &vinicius);
     allocGraph(&graph, map);
     makeGraph(map, &graph, &vinicius);
     findKeys(map, keylocation);
