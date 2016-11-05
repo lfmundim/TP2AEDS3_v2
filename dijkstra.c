@@ -9,7 +9,7 @@ int minDistance(int dist[], bool included[], int vertex_num){
     int min = INT_MAX, min_index=0, i;
 
     for(i=vertex_num-1; i>=0; i--){
-        if(included[i] == false && dist[i] <= min){
+        if(!included[i] && dist[i] <= min){
             min = dist[i];
             min_index = i;
         }
